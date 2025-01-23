@@ -3,11 +3,10 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 
 const Profile = async () => {
-    const { isAuthenticated, getUser } = getKindeServerSession();
-    const isUserAuthenticated = await isAuthenticated();
+    const { getUser } = getKindeServerSession();
 
-    if(!isUserAuthenticated)redirect('/api/auth/login');
     const user = await getUser();
+    if (!user) redirect('/api/auth/login');
     return (
         <div>
             <h2 className="text-2xl font-semibold text-center">Hello {user.family_name}</h2>
