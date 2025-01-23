@@ -1,8 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import "./globals.css";
 import Link from "next/link";
+import { AuthProvider } from "@/provider/AuthProvider";
+import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import {getKindeServerSession} from "@kinde-oss/kinde-auth-nextjs/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,11 +22,10 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-
   const { isAuthenticated } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated();
 
-  return (
+  return (<AuthProvider>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -37,21 +38,19 @@ export default async function RootLayout({ children }) {
               <li>
                 <Link href="/">Home</Link>
               </li>
+              {isUserAuthenticated ? <>
+                <li>
+                  <Link href="/profile">Profile</Link>
+                </li>
 
-              {
-                isUserAuthenticated ? <>
-                  <li>
-                    <Link href="/profile">Profile</Link>
-                  </li>
+                <li>
+                  <LogoutLink>Logout</LogoutLink>
+                </li>
+              </> : <li>
+                <LoginLink postLoginRedirectURL="/">Login</LoginLink>
+              </li>}
 
-                  <li>
-                    <Link href="/api/auth/logout">Logout</Link>
-                  </li>
-                </>
-                  :
-                  <li>
-                    <Link href="/api/auth/login">Login</Link>
-                  </li>}
+
             </ul>
           </nav>
         </header>
@@ -61,5 +60,5 @@ export default async function RootLayout({ children }) {
         </main>
       </body>
     </html>
-  );
+  </AuthProvider>);
 }
