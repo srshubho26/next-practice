@@ -44,7 +44,7 @@ export default async function RootLayout({ children }) {
                 </li>
 
                 <li>
-                  <LogoutLink>Logout</LogoutLink>
+                  <LogoutLink postLogoutRedirectURL="/">Logout</LogoutLink>
                 </li>
               </> : <li>
                 <LoginLink postLoginRedirectURL="/">Login</LoginLink>
